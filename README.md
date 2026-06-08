@@ -72,3 +72,20 @@ Uninstall with `./uninstall.sh` (your hatched pets are left in place).
   Automation permission the first time. If denied, the pet still runs (those extras no-op).
 - Notarization: the overlay is built locally on your machine by `install.sh`, so there's
   no Gatekeeper quarantine.
+
+## Troubleshooting
+
+**Overlay build fails with `redefinition of module 'SwiftBridging'`** (install prints
+`! overlay build failed`, and the `/hatch-pet` engine still works but no pet appears on
+screen). This is a stale Command Line Tools file, not a bug in Claude Pets: an older CLT
+left a `module.modulemap` behind that now collides with the current `bridging.modulemap`,
+which breaks **every** Swift compile on the machine. Move the stale duplicate aside:
+
+```bash
+sudo mv /Library/Developer/CommandLineTools/usr/include/swift/module.modulemap \
+        /Library/Developer/CommandLineTools/usr/include/swift/module.modulemap.bak
+```
+
+Then re-run `./install.sh` (or just rebuild: `swiftc -O ~/.claude/pets-companion/duple_pet.swift -o ~/.claude/pets-companion/duple_pet`)
+and start the pet with `/pets`. Reinstalling the Command Line Tools
+(`sudo rm -rf /Library/Developer/CommandLineTools && xcode-select --install`) also fixes it.
