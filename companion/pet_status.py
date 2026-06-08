@@ -63,6 +63,13 @@ def done_blurb(title: str) -> str:
     return "All done — your task is wrapped up."
 
 
+def _is_tool_result(content) -> bool:
+    """A user-role record that's a tool result (not a fresh human prompt)."""
+    return isinstance(content, list) and any(
+        isinstance(b, dict) and b.get("type") == "tool_result" for b in content
+    )
+
+
 def _message_text(content) -> str:
     if isinstance(content, str):
         return content.strip()
@@ -93,6 +100,11 @@ def parse_transcript(path: str):
                 t = rec.get("type")
                 if t == "ai-title" and rec.get("aiTitle"):
                     ai_title = rec["aiTitle"]
+                elif t == "user" and not _is_tool_result(rec.get("message", {}).get("content")):
+                    # A genuine new human prompt starts a fresh turn — drop the prior turn's
+                    # narration so the overlay shows the "thinking" verbs (not stale text)
+                    # until Claude narrates again this turn.
+                    last_assistant = ""
                 elif t == "assistant":
                     txt = _message_text(rec.get("message", {}).get("content"))
                     if txt:
@@ -156,8 +168,18 @@ def main() -> None:
         st["blurb"] = done_blurb(st.get("title", ""))
         st["state"] = "ready"
     elif event == "Notification":
-        st["blurb"] = shorten(data.get("message", ""), 200)
-        st["state"] = "waiting"
+        msg = data.get("message", "")
+        # Claude Code fires Notification BOTH for a genuine mid-task permission/approval
+        # prompt (needs input → orange clock) AND for the idle "Claude is waiting for your
+        # input" nudge that lands ~60s AFTER a turn already finished. The idle nudge must
+        # NOT downgrade a completed turn's green check back to the orange clock.
+        if re.search(r"waiting for your input", msg, re.I):
+            st["state"] = "ready"
+            if not st.get("blurb"):
+                st["blurb"] = done_blurb(st.get("title", ""))
+        else:
+            st["blurb"] = shorten(msg, 200)
+            st["state"] = "waiting"
     elif event == "SessionStart":
         st.setdefault("blurb", "")
         st.setdefault("state", "ready")

@@ -338,7 +338,8 @@ final class PetController: NSObject {
             if self.tickCount % 500 == 0 { self.view.verbIndex += 1 }   // rotate verbs ~every 50s
             self.view.needsDisplay = true
         }
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in self?.refreshStatus() }
+        // Poll status often so blurb/state changes surface near-instantly (was 1.0s → felt laggy).
+        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in self?.refreshStatus() }
         Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in self?.pollFocusDismiss() }
         refreshStatus()
     }
