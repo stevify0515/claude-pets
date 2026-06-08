@@ -1,0 +1,11 @@
+#!/bin/bash
+# Point the active pet at <id> and reload the overlay. Backs `/pets choose`.
+set -e
+PETS="$HOME/.claude/pets"
+COMP="$HOME/.claude/pets-companion"
+id="$1"
+[ -z "$id" ] && { echo "usage: set-active <pet-id>" >&2; exit 2; }
+[ -d "$PETS/$id" ] || { echo "No such pet: $id" >&2; exit 1; }
+ln -sfn "$PETS/$id" "$PETS/active"
+"$COMP/restart-pet" >/dev/null 2>&1 || true
+echo "Active pet is now: $id"

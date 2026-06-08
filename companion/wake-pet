@@ -1,0 +1,24 @@
+#!/bin/bash
+# Wake the floating desktop pet overlay (launches detached so it keeps floating).
+# Rebuilds the binary if the source is newer. Usage: wake-pet [--size N] [--sheet PATH]
+set -e
+DIR="$HOME/.claude/pets-companion"
+BIN="$DIR/duple_pet"
+SRC="$DIR/duple_pet.swift"
+
+if command -v swiftc >/dev/null 2>&1; then
+  if [ ! -x "$BIN" ] || [ "$SRC" -nt "$BIN" ]; then
+    echo "Building pet overlay…"
+    swiftc -O "$SRC" -o "$BIN"
+  fi
+fi
+if [ ! -x "$BIN" ]; then
+  echo "Pet overlay binary not found and Swift is unavailable (the overlay needs macOS + Xcode tools)." >&2
+  exit 1
+fi
+if pgrep -f "$BIN" >/dev/null 2>&1; then
+  echo "Pet is already awake."
+  exit 0
+fi
+nohup "$BIN" "$@" >/dev/null 2>&1 < /dev/null &
+echo "Pet woke up (PID $!)."

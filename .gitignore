@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+personal-pets/
+tools/.venv/
+tools/_flattened/
+tools/_*.png
+**/.venv/
+duple-pet.zip

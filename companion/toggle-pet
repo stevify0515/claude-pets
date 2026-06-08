@@ -1,0 +1,9 @@
+#!/bin/bash
+# Toggle the floating desktop pet overlay on/off. Backs /pet.
+BIN="$HOME/.claude/pets-companion/duple_pet"
+DIR="$HOME/.claude/pets-companion"
+if pgrep -f "$BIN" >/dev/null 2>&1; then
+  "$DIR/tuck-pet"
+else
+  "$DIR/wake-pet" "$@"
+fi

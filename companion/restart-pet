@@ -1,0 +1,5 @@
+#!/bin/bash
+# Restart the overlay so it picks up a newly-activated pet.
+DIR="$HOME/.claude/pets-companion"
+"$DIR/tuck-pet" >/dev/null 2>&1 || true
+"$DIR/wake-pet" "$@"

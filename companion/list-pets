@@ -1,0 +1,17 @@
+#!/bin/bash
+# List installed pets, marking the active one. Backs `/pets list` and `/pets choose`.
+PETS="$HOME/.claude/pets"
+active=""
+[ -L "$PETS/active" ] && active="$(basename "$(readlink "$PETS/active")")"
+shopt -s nullglob
+for d in "$PETS"/*/; do
+  name="$(basename "$d")"
+  [ "$name" = "status" ] && continue
+  [ "$name" = "active" ] && continue
+  disp="$name"
+  if [ -f "$d/pet.json" ]; then
+    dn="$(python3 -c "import json;print(json.load(open('$d/pet.json')).get('displayName',''))" 2>/dev/null)"
+    [ -n "$dn" ] && disp="$dn"
+  fi
+  if [ "$name" = "$active" ]; then echo "* $name — $disp (active)"; else echo "  $name — $disp"; fi
+done

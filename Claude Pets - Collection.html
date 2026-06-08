@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Pets — Collection</title>
+<style>
+  :root{
+    --bg:#1b1b1d;--panel:#242427;--panel-2:#2c2c30;--line:#3a3a3f;
+    --ink:#f4f3f0;--ink-dim:#a3a2a0;--ink-faint:#6f6e6d;
+    --fire:#f47a3a;--water:#4aa6ee;--grass:#5fc24e;--cat:#7a6f88;--dog:#bd8341;
+  }
+  *{box-sizing:border-box;}html,body{margin:0;}
+  body{background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:52px 40px 80px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  .kicker{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 14px;}
+  h1{font-size:34px;line-height:1.08;margin:0 0 16px;font-weight:680;letter-spacing:-.015em;}
+  .lede{font-size:15.5px;line-height:1.6;color:var(--ink-dim);max-width:680px;margin:0;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+  .chip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--ink-dim);
+    background:var(--panel);border:1px solid var(--line);padding:6px 11px;border-radius:7px;}
+
+  /* hero band — all five together on a neutral strip */
+  .band{margin-top:34px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);}
+  .band .strip{display:flex;align-items:flex-end;justify-content:space-around;gap:10px;
+    padding:34px 26px 30px;
+    background:
+      radial-gradient(80% 120% at 50% 0%, #2f2f33 0%, #232327 70%, #202023 100%);}
+  .band .strip img{image-rendering:pixelated;display:block;height:118px;width:auto;
+    animation:bob 2.8s ease-in-out infinite;}
+  .band .strip .pet{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .band .strip .pet .ground{width:64px;height:11px;border-radius:50%;background:rgba(0,0,0,.32);
+    margin-top:-6px;animation:floorPulse 2.8s ease-in-out infinite;}
+  .band .strip .pet:nth-child(2) img{animation-delay:.2s;}
+  .band .strip .pet:nth-child(3) img{animation-delay:.4s;}
+  .band .strip .pet:nth-child(4) img{animation-delay:.6s;}
+  .band .strip .pet:nth-child(5) img{animation-delay:.8s;}
+  @keyframes bob{0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-8px) scaleY(1.02);}}
+  @keyframes floorPulse{0%,100%{transform:scaleX(1);opacity:.85;}50%{transform:scaleX(.78);opacity:.5;}}
+  @media (prefers-reduced-motion:reduce){.band .strip img,.band .strip .ground{animation:none;}}
+  .band .caption{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:13px 20px;border-top:1px solid var(--line);background:var(--panel-2);
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;}
+
+  /* individual cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:18px;margin-top:24px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;
+    display:flex;flex-direction:column;}
+  .card .top{position:relative;height:160px;display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);}
+  .card .top::after{content:"";position:absolute;inset:0;
+    background:repeating-conic-gradient(#26262a 0% 25%, #222226 0% 50%) 50%/18px 18px;opacity:.5;z-index:0;}
+  .card .top img{image-rendering:pixelated;height:104px;width:auto;position:relative;z-index:1;
+    filter:drop-shadow(0 6px 0 rgba(0,0,0,.18));}
+  .card .info{padding:13px 15px 15px;}
+  .card .r1{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+  .card .nm{font-size:16px;font-weight:660;margin:0;letter-spacing:-.01em;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle;}
+  .card .sp{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);}
+  .card .tg{font-size:12.5px;color:var(--ink-dim);margin:6px 0 12px;line-height:1.45;}
+  .dl{display:flex;gap:7px;}
+  .dl a{flex:1;text-align:center;text-decoration:none;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:11px;color:var(--ink-dim);background:var(--panel-2);border:1px solid var(--line);
+    border-radius:7px;padding:6px 0;transition:background .14s,color .14s,border-color .14s;}
+  .dl a:hover{background:#34343a;color:var(--ink);border-color:#4a4a50;}
+
+  footer.foot{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--ink-faint);font-size:13px;line-height:1.6;max-width:680px;}
+  footer.foot b{color:var(--ink-dim);font-weight:600;}
+  footer.foot a{color:var(--ink-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Claude Pets · the collection</p>
+  <h1>Five desktop buddies</h1>
+  <p class="lede">
+    The keepers — a black cat, a brown dog, and the Fire, Water and Grass starters
+    Ember, Bloop and Sprout. One cohesive family: 32×32 chibi build, bold outline,
+    soft cel shading, big sparkly eyes and rosy cheeks. Each ships as a clean
+    transparent PNG, ready for the corner of a screen.
+  </p>
+  <div class="meta-row">
+    <span class="chip">5 sprites</span>
+    <span class="chip">32×32 source</span>
+    <span class="chip">transparent PNG · 128 + 256px</span>
+    <span class="chip">crisp nearest-neighbor scaling</span>
+  </div>
+
+  <div class="band">
+    <div class="strip" id="strip"></div>
+    <div class="caption"><span>THE LINEUP</span><span>MOCHI · BISCUIT · EMBER · BLOOP · SPROUT</span></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer class="foot">
+    <b>Files:</b> each pet is in <b>pets/&lt;name&gt;-128.png</b> and <b>-256.png</b>,
+    tightly cropped with a transparent background so it drops straight onto any desktop.
+    The little checkerboard behind each sprite just signals transparency — it isn't part
+    of the art. Want idle blink / wave / sleep frames, a sprite-sheet strip, or other
+    sizes? Say the word.
+  </footer>
+</div>
+
+<script>
+const PETS=[
+  {name:'Mochi',  file:'mochi',   sp:'Black Cat', color:'var(--cat)',  tag:'Naps on your keyboard, judges your code.'},
+  {name:'Biscuit',file:'biscuit', sp:'Brown Dog', color:'var(--dog)',  tag:'Ships fast, wags faster.'},
+  {name:'Ember',  file:'ember',   sp:'Fire · Emberling', color:'var(--fire)', tag:'A wisp of flame with a warm little heart.'},
+  {name:'Bloop',  file:'bloop',   sp:'Water · Slime',    color:'var(--water)',tag:'Bubbly and bouncy, goes with the flow.'},
+  {name:'Sprout', file:'sprout',  sp:'Grass · Seedling', color:'var(--grass)',tag:'Small shoots, big ideas.'},
+];
+
+const strip=document.getElementById('strip');
+PETS.forEach(p=>{
+  const d=document.createElement('div');d.className='pet';
+  d.innerHTML=`<img src="pets/${p.file}-256.png" alt="${p.name}"><div class="ground"></div>`;
+  strip.appendChild(d);
+});
+
+const grid=document.getElementById('grid');
+PETS.forEach(p=>{
+  const c=document.createElement('div');c.className='card';
+  c.innerHTML=
+    `<div class="top"><img src="pets/${p.file}-256.png" alt="${p.name}"></div>`+
+    `<div class="info">`+
+      `<div class="r1"><p class="nm"><span class="dot" style="background:${p.color}"></span>${p.name}</p></div>`+
+      `<div class="sp">${p.sp}</div>`+
+      `<p class="tg">${p.tag}</p>`+
+      `<div class="dl">`+
+        `<a href="pets/${p.file}-128.png" download>128px</a>`+
+        `<a href="pets/${p.file}-256.png" download>256px</a>`+
+      `</div>`+
+    `</div>`;
+  grid.appendChild(c);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "id": "mochi",
+  "displayName": "Mochi",
+  "description": "A black cat that naps on your keyboard and judges your code.",
+  "spritesheetPath": "spritesheet.webp"
+}

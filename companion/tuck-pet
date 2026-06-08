@@ -1,0 +1,4 @@
+#!/bin/bash
+# Tuck the floating desktop pet away (quit the overlay).
+BIN="$HOME/.claude/pets-companion/duple_pet"
+if pkill -f "$BIN" 2>/dev/null; then echo "Pet tucked away."; else echo "No pet was awake."; fi

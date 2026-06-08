@@ -1,0 +1,6 @@
+{
+  "id": "bloop",
+  "displayName": "Bloop",
+  "description": "A bubbly water slime that goes with the flow.",
+  "spritesheetPath": "spritesheet.webp"
+}
